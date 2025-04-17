@@ -30,4 +30,7 @@ public class User {
     }
 
 
+    public void assignAdminRole() {
+        this.role = Role.ADMIN;
+    }
 }

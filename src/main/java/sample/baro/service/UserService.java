@@ -12,12 +12,12 @@ import sample.baro.auth.jwt.TokenResponse;
 import sample.baro.domain.User;
 import sample.baro.dto.request.UserLoginRequest;
 import sample.baro.dto.request.UserSignupRequest;
+import sample.baro.dto.response.UserRoleAssignResponse;
 import sample.baro.dto.response.UserSignupResponse;
 import sample.baro.exception.UserCustomException;
 import sample.baro.repsitory.UserRepository;
 
-import static sample.baro.exception.ErrorCode.INVALID_CREDENTIALS;
-import static sample.baro.exception.ErrorCode.USER_ALREADY_EXISTS;
+import static sample.baro.exception.ErrorCode.*;
 
 @Service
 @RequiredArgsConstructor
@@ -57,5 +57,11 @@ public class UserService implements UserDetailsService {
         if (!passwordEncoder.matches(userLoginRequest.password(), userDetails.getPassword())) {
             throw new UserCustomException(INVALID_CREDENTIALS);
         }
+    }
+
+    public UserRoleAssignResponse assignAdminRoleById(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserCustomException(NOT_FOUND_USER));
+        user.assignAdminRole();
+        return UserRoleAssignResponse.from(user);
     }
 }

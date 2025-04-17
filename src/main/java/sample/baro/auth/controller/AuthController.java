@@ -3,11 +3,10 @@ package sample.baro.auth.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import sample.baro.auth.jwt.TokenResponse;
 import sample.baro.dto.request.UserLoginRequest;
+import sample.baro.dto.response.UserRoleAssignResponse;
 import sample.baro.service.UserService;
 
 @RestController
@@ -19,6 +18,12 @@ public class AuthController {
     public ResponseEntity<TokenResponse> login(@Valid @RequestBody UserLoginRequest userLoginRequest) {
         TokenResponse accessToken = userService.login(userLoginRequest);
         return ResponseEntity.ok().body(accessToken);
+    }
+
+    @PatchMapping("/admin/users/{userId}/roles")
+    public ResponseEntity<?> assignAdminRole(@PathVariable Long userId) {
+        UserRoleAssignResponse userRoleAssignResponse = userService.assignAdminRoleById(userId);
+        return ResponseEntity.ok().body(userRoleAssignResponse);
     }
 
 }

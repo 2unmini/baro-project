@@ -9,6 +9,7 @@ import sample.baro.exception.UserCustomException;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static sample.baro.exception.ErrorCode.INVALID_CREDENTIALS;
@@ -55,5 +56,10 @@ public class UserRepositoryImpl implements UserRepository {
             }
         }
         throw new UserCustomException(INVALID_CREDENTIALS);
+    }
+
+    @Override
+    public Optional<User> findById(Long userId) {
+        return Optional.ofNullable(userMap.get(userId));
     }
 }
