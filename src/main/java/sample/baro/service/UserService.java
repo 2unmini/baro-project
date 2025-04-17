@@ -1,21 +1,30 @@
 package sample.baro.service;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import sample.baro.auth.jwt.JwtUtil;
+import sample.baro.auth.jwt.TokenResponse;
 import sample.baro.domain.User;
+import sample.baro.dto.request.UserLoginRequest;
 import sample.baro.dto.request.UserSignupRequest;
 import sample.baro.dto.response.UserSignupResponse;
 import sample.baro.exception.UserCustomException;
 import sample.baro.repsitory.UserRepository;
 
+import static sample.baro.exception.ErrorCode.INVALID_INPUT;
 import static sample.baro.exception.ErrorCode.USER_ALREADY_EXISTS;
 
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
     public UserSignupResponse signup(UserSignupRequest request) {
         boolean isExist = userRepository.existByUsername(request.username());
@@ -30,5 +39,23 @@ public class UserService {
                 .build();
         User savedUser = userRepository.save(user);
         return UserSignupResponse.from(savedUser);
+    }
+
+    public TokenResponse login(@Valid UserLoginRequest userLoginRequest) {
+        UserDetails userDetails = loadUserByUsername(userLoginRequest.username());
+        isMatches(userLoginRequest, userDetails);
+        return new TokenResponse(jwtUtil.generateAccessToken(userDetails));
+
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepository.findByUsername(username);
+    }
+
+    private void isMatches(UserLoginRequest userLoginRequest, UserDetails userDetails) {
+        if (!passwordEncoder.matches(userLoginRequest.password(), userDetails.getPassword())) {
+            throw new UserCustomException(INVALID_INPUT);
+        }
     }
 }

@@ -1,12 +1,17 @@
 package sample.baro.repsitory;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
+import sample.baro.auth.CustomUserDetails;
 import sample.baro.domain.User;
+import sample.baro.exception.UserCustomException;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
+
+import static sample.baro.exception.ErrorCode.NOT_FOUND_USER;
 
 @Slf4j
 @Repository
@@ -40,5 +45,15 @@ public class UserRepositoryImpl implements UserRepository {
 
 
         return savedUser;
+    }
+
+    @Override
+    public UserDetails findByUsername(String username) {
+        for (User user : userMap.values()) {
+            if (user.getUsername().equals(username)) {
+                return new CustomUserDetails(user);
+            }
+        }
+        throw new UserCustomException(NOT_FOUND_USER);
     }
 }

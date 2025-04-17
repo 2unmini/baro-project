@@ -1,5 +1,6 @@
 package sample.baro.repsitory;
 
+import org.springframework.security.core.userdetails.UserDetails;
 import sample.baro.domain.User;
 
 public interface UserRepository {
@@ -8,4 +9,5 @@ public interface UserRepository {
 
     User save(User user);
 
+    UserDetails findByUsername(String username);
 }
