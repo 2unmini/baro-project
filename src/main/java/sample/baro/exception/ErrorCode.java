@@ -7,7 +7,8 @@ import org.springframework.http.HttpStatus;
 @Getter
 @AllArgsConstructor
 public enum ErrorCode {
-    USER_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "이미 가입된 사용자 입니다.");
+    USER_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 가입된 사용자 입니다."),
+    INVALID_INPUT(HttpStatus.BAD_REQUEST, "잘못된 입력입니다.");
 
     private final HttpStatus status;
 
