@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import sample.baro.dto.response.ExceptionResponse;
 
-import static sample.baro.exception.ErrorCode.INVALID_INPUT;
+import static sample.baro.exception.ErrorCode.INVALID_CREDENTIALS;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -18,6 +18,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ExceptionResponse> handleUserCustomException(MethodArgumentNotValidException e) {
-        return ResponseEntity.status(e.getStatusCode()).body(ExceptionResponse.of(INVALID_INPUT));
+        return ResponseEntity.status(e.getStatusCode()).body(ExceptionResponse.of(INVALID_CREDENTIALS));
     }
 }

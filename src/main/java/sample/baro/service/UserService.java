@@ -16,7 +16,7 @@ import sample.baro.dto.response.UserSignupResponse;
 import sample.baro.exception.UserCustomException;
 import sample.baro.repsitory.UserRepository;
 
-import static sample.baro.exception.ErrorCode.INVALID_INPUT;
+import static sample.baro.exception.ErrorCode.INVALID_CREDENTIALS;
 import static sample.baro.exception.ErrorCode.USER_ALREADY_EXISTS;
 
 @Service
@@ -55,7 +55,7 @@ public class UserService implements UserDetailsService {
 
     private void isMatches(UserLoginRequest userLoginRequest, UserDetails userDetails) {
         if (!passwordEncoder.matches(userLoginRequest.password(), userDetails.getPassword())) {
-            throw new UserCustomException(INVALID_INPUT);
+            throw new UserCustomException(INVALID_CREDENTIALS);
         }
     }
 }

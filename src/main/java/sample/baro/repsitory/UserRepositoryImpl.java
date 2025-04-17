@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
-import static sample.baro.exception.ErrorCode.NOT_FOUND_USER;
+import static sample.baro.exception.ErrorCode.INVALID_CREDENTIALS;
 
 @Slf4j
 @Repository
@@ -54,6 +54,6 @@ public class UserRepositoryImpl implements UserRepository {
                 return new CustomUserDetails(user);
             }
         }
-        throw new UserCustomException(NOT_FOUND_USER);
+        throw new UserCustomException(INVALID_CREDENTIALS);
     }
 }
