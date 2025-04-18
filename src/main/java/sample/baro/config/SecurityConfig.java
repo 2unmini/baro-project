@@ -11,6 +11,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import sample.baro.auth.jwt.CustomAuthEntryPoint;
 import sample.baro.auth.jwt.JwtFilter;
 import sample.baro.auth.jwt.JwtUtil;
 import sample.baro.domain.Role;
@@ -24,6 +25,7 @@ public class SecurityConfig {
 
     private final JwtUtil jwtUtil;
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
+    private final CustomAuthEntryPoint customAuthEntryPoint;
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -47,7 +49,8 @@ public class SecurityConfig {
 
         http.addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
-        http.exceptionHandling(exeception -> exeception.accessDeniedHandler(customAccessDeniedHandler));
+        http.exceptionHandling(exeception -> exeception.accessDeniedHandler(customAccessDeniedHandler)
+                .authenticationEntryPoint(customAuthEntryPoint));
 
         return http.build();
     }
