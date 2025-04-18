@@ -21,7 +21,7 @@ public class AuthController {
     }
 
     @PatchMapping("/admin/users/{userId}/roles")
-    public ResponseEntity<?> assignAdminRole(@PathVariable Long userId) {
+    public ResponseEntity<UserRoleAssignResponse> assignAdminRole(@PathVariable Long userId) {
         UserRoleAssignResponse userRoleAssignResponse = userService.assignAdminRoleById(userId);
         return ResponseEntity.ok().body(userRoleAssignResponse);
     }
