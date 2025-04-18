@@ -65,7 +65,6 @@ public class UserService implements UserDetailsService {
     public UserRoleAssignResponse assignAdminRoleById(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new UserCustomException(NOT_FOUND_USER));
         user.assignAdminRole();
-        userRepository.save(user);
         return UserRoleAssignResponse.from(user);
     }
 }
