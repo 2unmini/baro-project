@@ -41,6 +41,7 @@ public class UserRepositoryImpl implements UserRepository {
                 .username(user.getUsername())
                 .password(user.getPassword())
                 .nickname(user.getNickname())
+                .role(user.getRole())
                 .build();
         userMap.put(userId, savedUser);
 

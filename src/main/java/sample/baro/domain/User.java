@@ -5,9 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import static sample.baro.domain.Role.USER;
-
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
 @Getter
 public class User {
     private Long id;
@@ -20,13 +19,12 @@ public class User {
 
     private Role role;
 
-    @Builder
-    public User(Long id, String username, String password, String nickname) {
+    public User(Long id, String username, String password, String nickname, Role role) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.nickname = nickname;
-        this.role = USER;
+        this.role = (role != null) ? role : Role.USER;
     }
 
 
