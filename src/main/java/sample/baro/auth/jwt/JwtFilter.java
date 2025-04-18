@@ -33,6 +33,11 @@ public class JwtFilter extends OncePerRequestFilter {
 
         try {
             String token = authorization.substring(TOKEN_PREFIX.length());
+
+            if (!jwtUtil.validateToken(token)) {
+                filterChain.doFilter(request, response);
+                return;
+            }
             log.info("추출한 토큰: {}", token);
             String role = jwtUtil.getRole(token);
             String username = jwtUtil.getUsername(token);
