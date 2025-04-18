@@ -1,6 +1,5 @@
 package sample.baro.controller;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +18,7 @@ public class UserController implements UserControllerApi {
 
 
     @PostMapping("/signup")
-    public ResponseEntity<UserSignupResponse> signup(@Valid @RequestBody UserSignupRequest userSignupRequest) {
+    public ResponseEntity<UserSignupResponse> signup(@RequestBody UserSignupRequest userSignupRequest) {
         UserSignupResponse userSignupResponse = userService.signup(userSignupRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(userSignupResponse);
 
