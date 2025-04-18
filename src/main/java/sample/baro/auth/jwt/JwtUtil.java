@@ -1,5 +1,7 @@
 package sample.baro.auth.jwt;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -53,5 +55,19 @@ public class JwtUtil {
         return parser.parseSignedClaims(token)
                 .getPayload()
                 .getSubject();
+    }
+
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token);
+            return true;
+        } catch (ExpiredJwtException e) {
+            log.warn("만료된 토큰입니다: {}", e.getMessage());
+        } catch (JwtException e) {
+            log.warn("유효하지 않은 토큰입니다: {}", e.getMessage());
+        } catch (Exception e) {
+            log.warn("알수 없는 오류 예외 발생: {}", e.getMessage());
+        }
+        return false;
     }
 }

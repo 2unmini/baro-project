@@ -29,6 +29,8 @@ public class JwtFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
+
+
         try {
             String token = authorization.substring(TOKEN_PREFIX.length());
             log.info("추출한 토큰: {}", token);
