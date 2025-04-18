@@ -19,7 +19,7 @@ public class AdminInitializer {
 
         User admin = User.builder()
                 .username("ADMIN")
-                .password(passwordEncoder.encode("admin1234"))
+                .password(passwordEncoder.encode("ADMIN"))
                 .nickname("관리자")
                 .role(Role.ADMIN)
                 .build();

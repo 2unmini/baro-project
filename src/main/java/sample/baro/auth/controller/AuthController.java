@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import sample.baro.apidocs.AuthControllerApi;
 import sample.baro.auth.jwt.TokenResponse;
 import sample.baro.dto.request.UserLoginRequest;
 import sample.baro.dto.response.UserRoleAssignResponse;
@@ -11,7 +12,7 @@ import sample.baro.service.UserService;
 
 @RestController
 @RequiredArgsConstructor
-public class AuthController {
+public class AuthController implements AuthControllerApi {
     private final UserService userService;
 
     @PostMapping("/login")
