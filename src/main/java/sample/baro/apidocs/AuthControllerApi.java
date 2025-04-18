@@ -16,10 +16,10 @@ import sample.baro.dto.request.UserLoginRequest;
 import sample.baro.dto.response.ExceptionResponse;
 import sample.baro.dto.response.UserRoleAssignResponse;
 
-@Tag(name = "회원관리", description = "회원에 대한 [요구사항에 따른 수정]")
+@Tag(name = "회원관리", description = "사용자 로그인,관리자 권한 API")
 public interface AuthControllerApi {
 
-    @Operation(summary = "사용자 로그인 API ", description = "회원가입한 사용자는 로그인을 할 수있습니다.,ADMIN 로그인시 username:ADMIN ,password:ADMIN")
+    @Operation(summary = "사용자 로그인 API ", description = "회원가입한 사용자는 로그인을 할 수있습니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "회원가입 성공하였습니다."),
             @ApiResponse(responseCode = "400", description = "아이디 또는 비밀번호가 올바르지 않습니다",

@@ -13,7 +13,7 @@ import sample.baro.dto.request.UserSignupRequest;
 import sample.baro.dto.response.ExceptionResponse;
 import sample.baro.dto.response.UserSignupResponse;
 
-@Tag(name = "회원관리", description = "회원에 대한 [요구사항에 따른 수정]")
+@Tag(name = "회원관리", description = "회원 가입 API")
 public interface UserControllerApi {
 
 
