@@ -1,18 +1,13 @@
 package sample.baro.repository;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
-import sample.baro.auth.CustomUserDetails;
 import sample.baro.domain.User;
-import sample.baro.exception.UserCustomException;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
-
-import static sample.baro.exception.ErrorCode.INVALID_CREDENTIALS;
 
 @Slf4j
 @Repository
@@ -34,7 +29,6 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public User save(User user) {
         Long userId = id.getAndIncrement();
-        log.info("유저 id = {}", userId);
 
         User savedUser = User.builder()
                 .id(userId)
@@ -43,6 +37,9 @@ public class UserRepositoryImpl implements UserRepository {
                 .nickname(user.getNickname())
                 .role(user.getRole())
                 .build();
+
+        log.info("새로운 사용자 저장 = {}", savedUser.getNickname());
+
         userMap.put(userId, savedUser);
 
 
@@ -50,13 +47,13 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public UserDetails findByUsername(String username) {
+    public Optional<User> findByUsername(String username) {
         for (User user : userMap.values()) {
             if (user.getUsername().equals(username)) {
-                return new CustomUserDetails(user);
+                return Optional.of(user);
             }
         }
-        throw new UserCustomException(INVALID_CREDENTIALS);
+        return Optional.empty();
     }
 
     @Override

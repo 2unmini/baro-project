@@ -8,7 +8,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import sample.baro.UserTestBuilder;
-import sample.baro.auth.CustomUserDetails;
 import sample.baro.auth.jwt.JwtUtil;
 import sample.baro.auth.jwt.TokenResponse;
 import sample.baro.domain.User;
@@ -83,10 +82,9 @@ public class UserServiceTest {
         UserLoginRequest userLoginRequest = new UserLoginRequest("JIN HO", "12341234");
 
         User user = UserTestBuilder.defaultUser();
-        CustomUserDetails customUserDetails = new CustomUserDetails(user);
-        given(userRepository.findByUsername("JIN HO")).willReturn(customUserDetails);
+        given(userRepository.findByUsername("JIN HO")).willReturn(Optional.of(user));
         given(passwordEncoder.matches("12341234", "12341234")).willReturn(true);
-        given(jwtUtil.generateAccessToken(customUserDetails)).willReturn("accessToken");
+        given(jwtUtil.generateAccessToken(any())).willReturn("accessToken");
 
         //when
         TokenResponse tokenResponse = userService.login(userLoginRequest);
@@ -97,7 +95,7 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("잘못된 비밀번호를 입력하면 로그인을 할수 없다")
-    void FailLogin() {
+    void failLogin() {
 
         //given
         UserLoginRequest userLoginRequest = new UserLoginRequest("JIN HO", "wrongPassword");
@@ -105,8 +103,8 @@ public class UserServiceTest {
         User user = UserTestBuilder.builder()
                 .withPassword("12341234")
                 .build();
-        CustomUserDetails customUserDetails = new CustomUserDetails(user);
-        given(userRepository.findByUsername("JIN HO")).willReturn(customUserDetails);
+
+        given(userRepository.findByUsername("JIN HO")).willReturn(Optional.of(user));
         given(passwordEncoder.matches("wrongPassword", "12341234")).willReturn(false);
 
         //when

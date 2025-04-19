@@ -40,7 +40,7 @@ public class UserService implements UserDetailsService {
     }
 
     public TokenResponse login(@Valid UserLoginRequest userLoginRequest) {
-        CustomUserDetails userDetails = (CustomUserDetails) loadUserByUsername(userLoginRequest.username());
+        CustomUserDetails userDetails = loadUserByUsername(userLoginRequest.username());
         isMatches(userLoginRequest, userDetails);
         return new TokenResponse(jwtUtil.generateAccessToken(userDetails));
 
@@ -53,8 +53,9 @@ public class UserService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByUsername(username);
+    public CustomUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new UserCustomException(INVALID_CREDENTIALS));
+        return new CustomUserDetails(user);
     }
 
     private User createUser(UserSignupRequest request) {
