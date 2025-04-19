@@ -7,6 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import sample.baro.UserTestBuilder;
 import sample.baro.auth.CustomUserDetails;
 import sample.baro.auth.jwt.JwtUtil;
 import sample.baro.auth.jwt.TokenResponse;
@@ -48,7 +49,7 @@ public class UserServiceTest {
         UserSignupRequest userSignupRequest = new UserSignupRequest("JIN HO", "12341234", "Mentos");
         given(userRepository.existByUsername("JIN HO")).willReturn(false);
 
-        User user = User.builder().username("JIN HO").password("12341234").nickname("Mentos").build();
+        User user = UserTestBuilder.defaultUser();
 
         given(userRepository.save(any())).willReturn(user);
 
@@ -81,7 +82,7 @@ public class UserServiceTest {
         //given
         UserLoginRequest userLoginRequest = new UserLoginRequest("JIN HO", "12341234");
 
-        User user = User.builder().username("JIN HO").password("12341234").nickname("Mentos").build();
+        User user = UserTestBuilder.defaultUser();
         CustomUserDetails customUserDetails = new CustomUserDetails(user);
         given(userRepository.findByUsername("JIN HO")).willReturn(customUserDetails);
         given(passwordEncoder.matches("12341234", "12341234")).willReturn(true);
@@ -95,13 +96,15 @@ public class UserServiceTest {
     }
 
     @Test
-    @DisplayName("잘못된 정보를 입력하면 로그인을 할수 없다")
+    @DisplayName("잘못된 비밀번호를 입력하면 로그인을 할수 없다")
     void FailLogin() {
 
         //given
         UserLoginRequest userLoginRequest = new UserLoginRequest("JIN HO", "wrongPassword");
 
-        User user = User.builder().username("JIN HO").password("12341234").nickname("Mentos").build();
+        User user = UserTestBuilder.builder()
+                .withPassword("12341234")
+                .build();
         CustomUserDetails customUserDetails = new CustomUserDetails(user);
         given(userRepository.findByUsername("JIN HO")).willReturn(customUserDetails);
         given(passwordEncoder.matches("wrongPassword", "12341234")).willReturn(false);
@@ -116,8 +119,8 @@ public class UserServiceTest {
     void successAssignRole() {
 
         //given
-        User user = User.builder().id(2L).username("JIN HO").password("12341234").nickname("Mentos").build();
-        given(userRepository.findById(2L)).willReturn(Optional.of(user));
+        User user = UserTestBuilder.defaultUser();
+        given(userRepository.findById(any())).willReturn(Optional.of(user));
 
         //when
         UserRoleAssignResponse userRoleAssignResponse = userService.assignAdminRoleById(2L);

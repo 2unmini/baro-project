@@ -44,7 +44,7 @@ class AuthControllerTest {
     private final String ACCESS_TOKEN = "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJKSU4gSE8iLCJyb2xlIjoiVVNFUiIsImlhdCI6MTc0NDk5NjM5MiwiZXhwIjoxNzQ0OTk5OTkyfQ.L6qJT6I4WQ-A5zUeMJb0_grknhHARxuX-20TUixzu7qPxeeJOII52oSv2rL2hFCI";
 
     @Test
-    @DisplayName("로그인 성공하면 토큰을 반환한다")
+    @DisplayName("로그인 요청시 200 Ok와 토큰을 반환한다")
     void login() throws Exception {
 
         //given
@@ -63,7 +63,7 @@ class AuthControllerTest {
     }
 
     @Test
-    @DisplayName("잘못된 아이디 또는 비밀번호를 입력하면 로그인을 실패한다.")
+    @DisplayName("잘못된 아이디 또는 비밀번호로 로그인 요청시 400 BadRequest 와 에러 메시지를 반환한다.")
     void loginFail() throws Exception {
         //given
         UserLoginRequest userLoginRequest = new UserLoginRequest("JIN HO", "틀린 비밀번호");
@@ -85,7 +85,7 @@ class AuthControllerTest {
     private final Long userId = 1L;
 
     @Test
-    @DisplayName("ADMIN 은 USER 에게 ADMIN 권한을 부여 할 수 있다.")
+    @DisplayName("ADMIN 은 USER 에게 ADMIN 권한 부여시 200 OK와.사용자 정보를 반환한다.")
     void assignAdminRole() throws Exception {
 
         //given
@@ -106,7 +106,7 @@ class AuthControllerTest {
     }
 
     @Test
-    @DisplayName("USER 은 다른 USER 에게 ADMIN 권한을 부여 할 수 없다.")
+    @DisplayName("USER 은 다른 USER 에게 ADMIN 권한을 부여시 403 Forbidden 과 에러메시지를 반환한다.")
     @WithMockUser(username = "user")
     void assignAdminRoleNotAdmin() throws Exception {
 

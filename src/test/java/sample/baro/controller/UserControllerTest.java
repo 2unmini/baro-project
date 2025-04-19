@@ -38,7 +38,7 @@ class UserControllerTest {
     private ObjectMapper objectMapper;
 
     @Test
-    @DisplayName("사용자는 회원가입 할 수 있다.")
+    @DisplayName("회원가입 요청시 201 Created 와 사용자 정보를 반환한다.")
     void signup() throws Exception {
 
         //given
@@ -59,12 +59,11 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("중복된 Username 이 있다면 가입 할 수 없다.")
+    @DisplayName("회원가입 요청시 중복된 Username 이 있다면 409 Conflict 와 에러메시지를 반환한다.")
     void duplicateSignup() throws Exception {
 
         //given
         UserSignupRequest userSignupRequest = new UserSignupRequest("JIN HO", "12341234", "Mentos");
-        UserSignupResponse userSignupResponse = new UserSignupResponse("JIN HO", "Mentos", List.of(new UserSignupResponse.RoleResponse(Role.USER.name())));
 
         given(userService.signup(any())).willThrow(new UserCustomException(USER_ALREADY_EXISTS));
 

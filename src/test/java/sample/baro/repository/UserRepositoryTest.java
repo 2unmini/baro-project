@@ -3,6 +3,7 @@ package sample.baro.repository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import sample.baro.UserTestBuilder;
 import sample.baro.domain.User;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -20,11 +21,7 @@ public class UserRepositoryTest {
     @DisplayName("사용자를 저장하면 ID가 자동 부여되고 조회 가능하다.")
     void saveUser() {
         // given
-        User user = User.builder()
-                .username("JIN HO")
-                .password("1234")
-                .nickname("Mentos")
-                .build();
+        User user = UserTestBuilder.defaultUser();
 
         // when
         User savedUser = userRepository.save(user);
@@ -39,11 +36,7 @@ public class UserRepositoryTest {
     @DisplayName("사용자가 존재하면 True를 반환한다.")
     void existByUsername() {
         // given
-        User user = User.builder()
-                .username("JIN HO")
-                .password("1234")
-                .nickname("Mentos")
-                .build();
+        User user = UserTestBuilder.defaultUser();
 
         // when
         userRepository.save(user);
