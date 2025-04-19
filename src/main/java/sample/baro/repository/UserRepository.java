@@ -1,4 +1,4 @@
-package sample.baro.repsitory;
+package sample.baro.repository;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import sample.baro.domain.User;

@@ -16,7 +16,7 @@ import sample.baro.dto.request.UserSignupRequest;
 import sample.baro.dto.response.UserRoleAssignResponse;
 import sample.baro.dto.response.UserSignupResponse;
 import sample.baro.exception.UserCustomException;
-import sample.baro.repsitory.UserRepository;
+import sample.baro.repository.UserRepository;
 
 import static sample.baro.domain.Role.USER;
 import static sample.baro.exception.ErrorCode.*;

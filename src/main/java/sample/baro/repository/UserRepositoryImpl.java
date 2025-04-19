@@ -1,4 +1,4 @@
-package sample.baro.repsitory;
+package sample.baro.repository;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -6,7 +6,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import sample.baro.domain.Role;
 import sample.baro.domain.User;
-import sample.baro.repsitory.UserRepository;
+import sample.baro.repository.UserRepository;
 
 @Component
 @RequiredArgsConstructor
