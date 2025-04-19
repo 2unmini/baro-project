@@ -34,12 +34,7 @@ public class UserService implements UserDetailsService {
         if (isExist) {
             throw new UserCustomException(USER_ALREADY_EXISTS);
         }
-        User user = User.builder()
-                .username(request.username())
-                .password(passwordEncoder.encode(request.password()))
-                .nickname(request.nickname())
-                .role(USER)
-                .build();
+        User user = createUser(request);
         User savedUser = userRepository.save(user);
         return UserSignupResponse.from(savedUser);
     }
@@ -51,20 +46,29 @@ public class UserService implements UserDetailsService {
 
     }
 
+    public UserRoleAssignResponse assignAdminRoleById(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserCustomException(NOT_FOUND_USER));
+        user.assignAdminRole();
+        return UserRoleAssignResponse.from(user);
+    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByUsername(username);
+    }
+
+    private User createUser(UserSignupRequest request) {
+        return User.builder()
+                .username(request.username())
+                .password(passwordEncoder.encode(request.password()))
+                .nickname(request.nickname())
+                .role(USER)
+                .build();
     }
 
     private void isMatches(UserLoginRequest userLoginRequest, UserDetails userDetails) {
         if (!passwordEncoder.matches(userLoginRequest.password(), userDetails.getPassword())) {
             throw new UserCustomException(INVALID_CREDENTIALS);
         }
-    }
-
-    public UserRoleAssignResponse assignAdminRoleById(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new UserCustomException(NOT_FOUND_USER));
-        user.assignAdminRole();
-        return UserRoleAssignResponse.from(user);
     }
 }
