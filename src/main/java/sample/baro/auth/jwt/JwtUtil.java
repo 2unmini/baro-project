@@ -12,6 +12,7 @@ import sample.baro.auth.CustomUserDetails;
 import sample.baro.domain.Role;
 
 import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 @Slf4j
@@ -20,11 +21,11 @@ public class JwtUtil {
 
     private final SecretKey secretKey;
     @Value("${jwt.expiration-ms}")
-    private long TOKEN_EXPIRATION;
+    private long tokenExpiration;
 
     public JwtUtil(@Value("${jwt.secret-key}") String key) {
 
-        this.secretKey = Keys.hmacShaKeyFor(key.getBytes());
+        this.secretKey = Keys.hmacShaKeyFor(key.getBytes(StandardCharsets.UTF_8));
     }
 
     public String generateAccessToken(CustomUserDetails userDetails) {
@@ -33,7 +34,7 @@ public class JwtUtil {
 
     private String generateToken(String username, Role role) {
         Date now = new Date();
-        Date exp = new Date(now.getTime() + TOKEN_EXPIRATION);
+        Date exp = new Date(now.getTime() + tokenExpiration);
         return Jwts.builder().setSubject(username)
                 .claim("role", role.name())
                 .signWith(secretKey)

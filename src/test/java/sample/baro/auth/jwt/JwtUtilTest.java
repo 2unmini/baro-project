@@ -1,23 +1,22 @@
 package sample.baro.auth.jwt;
 
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
 import sample.baro.UserTestBuilder;
 import sample.baro.auth.CustomUserDetails;
 import sample.baro.domain.User;
 
-import java.util.concurrent.TimeUnit;
+import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
+import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-@TestPropertySource(properties = {
-        "jwt.secret-key=67CU66Gc7J247YS0IOyngeustOqzvOygnCDthYzsiqTtirjsmqkg7YKk7IS47YyF7J6F64uI64ukIQ==",
-        "jwt.expiration-ms=5000"
-})
 class JwtUtilTest {
     @Autowired
     private JwtUtil jwtUtil;
@@ -41,23 +40,6 @@ class JwtUtilTest {
         assertThat(role).isEqualTo("USER");
     }
 
-    @Test
-    @DisplayName("토큰이 만료되면 False 를 반환한다.")
-    void failExpiredTokenValidation() throws InterruptedException {
-        //given
-        User user = UserTestBuilder.defaultUser();
-        CustomUserDetails userDetails = new CustomUserDetails(user);
-
-        String token = jwtUtil.generateAccessToken(userDetails);
-
-        TimeUnit.MILLISECONDS.sleep(5000);
-
-        //when
-        boolean isValid = jwtUtil.validateToken(token);
-        //then
-        assertThat(isValid).isFalse();
-    }
-
 
     @Test
     @DisplayName("유효한 토큰은 True 를 반환한다.")
@@ -72,6 +54,33 @@ class JwtUtilTest {
         boolean isValid = jwtUtil.validateToken(token);
         //then
         assertThat(isValid).isTrue();
+    }
+
+    private final String TEST_SECRET_KEY = "67CU66Gc7J247YS0IOyngeustOqzvOygnCDthYzsiqTtirjsmqkg7YKk7IS47YyF7J6F64uI64ukIQ==";
+
+    @Test
+    @DisplayName("토큰이 만료되면 False 를 반환한다.")
+    void failExpiredTokenValidation() {
+        SecretKey secretKey = Keys.hmacShaKeyFor(TEST_SECRET_KEY.getBytes(StandardCharsets.UTF_8));
+
+        //given
+        User user = UserTestBuilder.defaultUser();
+        CustomUserDetails userDetails = new CustomUserDetails(user);
+
+        Date now = new Date();
+        Date exp = new Date(now.getTime() - 1000);
+        String expiredToken = Jwts.builder()
+                .setSubject(userDetails.getUsername())
+                .claim("role", userDetails.getRole().name())
+                .signWith(secretKey)
+                .setIssuedAt(now)
+                .setExpiration(exp)
+                .compact();
+
+        //when
+        boolean isValid = jwtUtil.validateToken(expiredToken);
+        //then
+        assertThat(isValid).isFalse();
     }
 
     @Test
